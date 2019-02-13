@@ -1,4 +1,4 @@
-
+#THIS ONE IS NO GOOD, DONT USE THIS ONE OMEGALUL
 def func1():
     return 0
 
