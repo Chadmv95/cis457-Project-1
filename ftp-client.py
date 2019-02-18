@@ -2,6 +2,7 @@
 # Description: ftp-client will connect to an ftp server. Valid commands are exit, retrieve, store, and list
 
 #!/usr/bin/python3
+
 import ftplib
 
 
@@ -9,9 +10,9 @@ import ftplib
 # return IP of server and port number
 def welcome():
     print("Welcome to FTP client app\n")
-    serverName=input("Please enter the server name:\n")
-    portNumber=input("please enter the port number:\n")
-    return serverName, portNumber
+    server_name=input("Please enter the server name:\n")
+    port_number=input("please enter the port number:\n")
+    return server_name, port_number
 
 
 # Create client connection to server
@@ -21,6 +22,7 @@ def welcome():
 def create_client(ip, port):
     ftp = ftplib.FTP('')
     ftp.connect("35.40.135.176", 1026)
+    #ftp.connect(ip, int(port))
     ftp.login()
     return ftp
 
@@ -30,6 +32,7 @@ def create_client(ip, port):
 def list_files(ftp):
     print("List files in directory: ")
     print(ftp.retrlines('List'))
+    print("\n\n")
 
 
 # Retrieve a file from the server
@@ -37,16 +40,25 @@ def list_files(ftp):
 def retrieve(ftp):
     filename= input("Enter filename of file to retrieve\n")
     # create file to store retrieved data in
-    localfile = open(filename, 'wb')
-    ftp.retrbinary('RETR '+filename, localfile.write, 1024)
-    localfile.close()
+    try:
+        localfile = open(filename, 'wb')
+        ftp.retrbinary('RETR '+filename, localfile.write, 1024)
+        localfile.close()
+        print("File Retrieved \n\n")
+    except IOError:
+        print("Failure to retrieve file\n\n")
 
 
 # Store file in server
 # param - ftp connection
 def store(ftp):
     filename=input("Enter filename to store \n")
-    ftp.storbinary('STOR ' + filename, open(filename, 'rb'))
+    try:
+        ftp.storbinary('STOR ' + filename, open(filename, 'rb'))
+    except IOError:
+        print("Error: file does not appear to exist \n")
+    except ftplib.all_errors:
+        print("Error: ftp error \n")
 
 
 # End client connection to server
@@ -57,8 +69,15 @@ def quit_connection(ftp):
 
 
 def main():
-    server_name, port_number=welcome()
-    ftp_connection = create_client(server_name, port_number)
+    ftp_connection=None
+    while ftp_connection is None:
+        server_name, port_number = welcome()
+        try:
+            ftp_connection = create_client(server_name, port_number)
+        except ftplib.all_errors:
+            print("Could not connect to server, try again\n")
+            ftp_connection = None
+
     command = None
     while command != "quit":
         command = input("Enter Command: LIST, RETRIEVE, STORE, QUIT")
