@@ -21,9 +21,13 @@ def welcome():
 # To Do: Add try/catch for connection
 def create_client(ip, port):
     ftp = ftplib.FTP('')
-    ftp.connect("35.40.135.176", 1026)
-    #ftp.connect(ip, int(port))
-    ftp.login()
+    #ftp.connect("127.0.0.1", 8080)
+    try:
+        ftp.connect(ip, int(port))
+        ftp.login()
+    except ftp.all_errors:
+        print("Error: ftp error \n")
+
     return ftp
 
 
@@ -80,7 +84,7 @@ def main():
 
     command = None
     while command != "quit":
-        command = input("Enter Command: LIST, RETRIEVE, STORE, QUIT")
+        command = input("Enter Command: LIST, RETRIEVE, STORE, QUIT: ")
         if command.lower() == "list":
             list_files(ftp_connection)
         elif command.lower() == "retrieve":

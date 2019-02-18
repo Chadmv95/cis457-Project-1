@@ -9,5 +9,8 @@ authorizer.add_anonymous("/Users/chadvredeveld/Documents/cis457/ftp-folder", per
 handler = FTPHandler
 handler.authorizer = authorizer
 
-server = FTPServer(("35.40.134.137", 1026), handler)
-server.serve_forever()
+try:
+    server = FTPServer(("127.0.0.1", 8021), handler)
+    server.serve_forever()
+except ftplib.all_errors:
+    print("Error: ftp error \n")
