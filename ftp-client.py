@@ -20,7 +20,7 @@ def welcome():
 # To Do: Add try/catch for connection
 def create_client(ip, port):
     ftp = ftplib.FTP('')
-    ftp.connect(ip, int(port))
+    ftp.connect("35.40.135.176", 1026)
     ftp.login()
     return ftp
 
@@ -35,9 +35,7 @@ def list_files(ftp):
 # Retrieve a file from the server
 # param - ftp connection
 def retrieve(ftp):
-    directory= input("Enter directory to retrieve file from\n")
     filename= input("Enter filename of file to retrieve\n")
-    ftp.cwd(directory)
     # create file to store retrieved data in
     localfile = open(filename, 'wb')
     ftp.retrbinary('RETR '+filename, localfile.write, 1024)
@@ -48,7 +46,7 @@ def retrieve(ftp):
 # param - ftp connection
 def store(ftp):
     filename=input("Enter filename to store \n")
-    ftp.storbinary('STOR '+filename, 'rb')
+    ftp.storbinary('STOR ' + filename, open(filename, 'rb'))
 
 
 # End client connection to server
