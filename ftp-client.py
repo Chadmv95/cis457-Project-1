@@ -22,11 +22,8 @@ def welcome():
 def create_client(ip, port):
     ftp = ftplib.FTP('')
     #ftp.connect("127.0.0.1", 8080)
-    try:
-        ftp.connect(ip, int(port))
-        ftp.login()
-    except ftp.all_errors:
-        print("Error: ftp error \n")
+    ftp.connect(ip, int(port))
+    ftp.login()
 
     return ftp
 
@@ -51,6 +48,8 @@ def retrieve(ftp):
         print("File Retrieved \n\n")
     except IOError:
         print("Failure to retrieve file\n\n")
+    except ftplib.all_errors:
+        print("Error: ftp error \n")
 
 
 # Store file in server
